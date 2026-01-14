@@ -1,0 +1,541 @@
+{
+	"name": "VariedadesERP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FacilERP",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "idVariedad",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "idProducto",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Cod_Variedad",
+				"type": "varchar"
+			},
+			{
+				"name": "Cod_Variedad1",
+				"type": "varchar"
+			},
+			{
+				"name": "SKU",
+				"type": "varchar"
+			},
+			{
+				"name": "Tipo",
+				"type": "bit"
+			},
+			{
+				"name": "Nom_Variedad",
+				"type": "varchar"
+			},
+			{
+				"name": "Nab_Variedad",
+				"type": "varchar"
+			},
+			{
+				"name": "Pre_CostoSoles",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_CostoDolares",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_CostoSolesAnterior",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_CostoDolaresAnterior",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_CostoReposicionSoles",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_CostoReposicionDolares",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaMinimoSoles",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaMinimoDolares",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaMinimoSolesC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaMinimoDolaresC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSoles",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolares",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp1",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp1",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp1C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp1C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp2",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp2",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp2C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp2C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp3",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp3",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesEsp3C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresEsp3C",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesMayor",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresMayor",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaSolesMayorC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_VentaDolaresMayorC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Cantidad",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad1",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad2",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad3",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad4",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad5",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad6",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad7",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad8",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad9",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad10",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad11",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad12",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad13",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad14",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Cantidad15",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Unidad",
+				"type": "varchar"
+			},
+			{
+				"name": "Sto_Minimo",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Por_UtilidadMinimo",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_DescuentoMinimo",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_Utilidad",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_Descuento",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_UtilidadEsp1",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_DescuentoEsp1",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_UtilidadEsp2",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_DescuentoEsp2",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_UtilidadEsp3",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_DescuentoEsp3",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_UtilidadMayor",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Por_DescuentoMayor",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Pre_ComisionSoles",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Pre_ComisionDolares",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Por_Comision",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "AfectoPercepcion",
+				"type": "bit"
+			},
+			{
+				"name": "Series",
+				"type": "bit"
+			},
+			{
+				"name": "IngresoValor",
+				"type": "bit"
+			},
+			{
+				"name": "Descripcion",
+				"type": "varchar"
+			},
+			{
+				"name": "AfectoStock",
+				"type": "bit"
+			},
+			{
+				"name": "AfectoIGV",
+				"type": "bit"
+			},
+			{
+				"name": "Activo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Estado",
+				"type": "varchar"
+			},
+			{
+				"name": "Peso",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Ubicacion",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion1",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion2",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion3",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion4",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion5",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion6",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion7",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion8",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion9",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion10",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion11",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion12",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion13",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion14",
+				"type": "varchar"
+			},
+			{
+				"name": "Ubicacion15",
+				"type": "varchar"
+			},
+			{
+				"name": "Internet",
+				"type": "bit"
+			},
+			{
+				"name": "GarantiaPeriodo",
+				"type": "char"
+			},
+			{
+				"name": "GarantiaNumero",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "GarantiaPorcentaje",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "GarantiaSumPrecio",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "PreciosSuperProducto",
+				"type": "bit"
+			},
+			{
+				"name": "Volumen",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "ProductoVenta",
+				"type": "bit"
+			},
+			{
+				"name": "EnlaceWeb",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Variedades"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

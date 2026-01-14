@@ -1,0 +1,9 @@
+{
+	"name": "ReplicationTest",
+	"location": "brazilsouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0a8c4885-b532-4e80-a44a-64931fa57f18",
+		"tenantId": "950445e3-48c0-48a6-81b3-dfb83622a976"
+	}
+}
