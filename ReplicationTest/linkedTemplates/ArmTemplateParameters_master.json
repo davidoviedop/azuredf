@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ReplicationTest"
+		},
+		"FacilTEST_password": {
+			"value": ""
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://faciltest.vault.azure.net/"
+		},
+		"FacilERP_properties_typeProperties_server": {
+			"value": "camos.facilsoft.pe,49301"
+		},
+		"FacilERP_properties_typeProperties_database": {
+			"value": "FacilERP"
+		},
+		"FacilERP_properties_typeProperties_userName": {
+			"value": "admfs"
+		},
+		"FacilREP_properties_typeProperties_server": {
+			"value": "faciltest.database.windows.net"
+		},
+		"FacilREP_properties_typeProperties_database": {
+			"value": "FacilREP"
+		},
+		"FacilREP_properties_typeProperties_userName": {
+			"value": "admfs"
+		},
+		"FacilTEST_properties_typeProperties_server": {
+			"value": "faciltest.database.windows.net"
+		},
+		"FacilTEST_properties_typeProperties_database": {
+			"value": "FacilTEST"
+		},
+		"FacilTEST_properties_typeProperties_userName": {
+			"value": "admfs"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

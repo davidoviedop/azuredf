@@ -1,0 +1,1009 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ReplicationTest"
+		},
+		"FacilTEST_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FacilTEST'"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://faciltest.vault.azure.net/"
+		},
+		"FacilTEST_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "faciltest.database.windows.net"
+		},
+		"FacilTEST_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "FacilTEST"
+		},
+		"FacilTEST_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admfs"
+		},
+		"FacilERP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "camos.facilsoft.pe,49301"
+		},
+		"FacilERP_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "FacilERP"
+		},
+		"FacilERP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admfs"
+		},
+		"FacilREP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "faciltest.database.windows.net"
+		},
+		"FacilREP_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "FacilREP"
+		},
+		"FacilREP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admfs"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FacilTEST')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Product database",
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('FacilTEST_properties_typeProperties_server')]",
+					"database": "[parameters('FacilTEST_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('FacilTEST_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FacilTEST_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FacilTEST')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FacilTEST",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ProductId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Sku",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Description",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Price",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "Stock",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedAt",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Products"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FacilTEST')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FacilERP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('FacilERP_properties_typeProperties_server')]",
+					"database": "[parameters('FacilERP_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('FacilERP_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "DBP"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FacilREP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('FacilREP_properties_typeProperties_server')]",
+					"database": "[parameters('FacilREP_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('FacilREP_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "DBP"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VariedadesERP')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FacilERP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "idVariedad",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "idProducto",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Cod_Variedad",
+						"type": "varchar"
+					},
+					{
+						"name": "Cod_Variedad1",
+						"type": "varchar"
+					},
+					{
+						"name": "SKU",
+						"type": "varchar"
+					},
+					{
+						"name": "Tipo",
+						"type": "bit"
+					},
+					{
+						"name": "Nom_Variedad",
+						"type": "varchar"
+					},
+					{
+						"name": "Nab_Variedad",
+						"type": "varchar"
+					},
+					{
+						"name": "Pre_CostoSoles",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_CostoDolares",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_CostoSolesAnterior",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_CostoDolaresAnterior",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_CostoReposicionSoles",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_CostoReposicionDolares",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaMinimoSoles",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaMinimoDolares",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaMinimoSolesC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaMinimoDolaresC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSoles",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolares",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp1",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp1",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp1C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp1C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp2",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp2",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp2C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp2C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp3",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp3",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesEsp3C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresEsp3C",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesMayor",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresMayor",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaSolesMayorC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_VentaDolaresMayorC",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Cantidad",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad1",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad2",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad3",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad4",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad5",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad6",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad7",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad8",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad9",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad10",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad11",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad12",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad13",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad14",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Cantidad15",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Unidad",
+						"type": "varchar"
+					},
+					{
+						"name": "Sto_Minimo",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Por_UtilidadMinimo",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_DescuentoMinimo",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_Utilidad",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_Descuento",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_UtilidadEsp1",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_DescuentoEsp1",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_UtilidadEsp2",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_DescuentoEsp2",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_UtilidadEsp3",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_DescuentoEsp3",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_UtilidadMayor",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Por_DescuentoMayor",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Pre_ComisionSoles",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Pre_ComisionDolares",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Por_Comision",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "AfectoPercepcion",
+						"type": "bit"
+					},
+					{
+						"name": "Series",
+						"type": "bit"
+					},
+					{
+						"name": "IngresoValor",
+						"type": "bit"
+					},
+					{
+						"name": "Descripcion",
+						"type": "varchar"
+					},
+					{
+						"name": "AfectoStock",
+						"type": "bit"
+					},
+					{
+						"name": "AfectoIGV",
+						"type": "bit"
+					},
+					{
+						"name": "Activo",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Estado",
+						"type": "varchar"
+					},
+					{
+						"name": "Peso",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Ubicacion",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion1",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion2",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion3",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion4",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion5",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion6",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion7",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion8",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion9",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion10",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion11",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion12",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion13",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion14",
+						"type": "varchar"
+					},
+					{
+						"name": "Ubicacion15",
+						"type": "varchar"
+					},
+					{
+						"name": "Internet",
+						"type": "bit"
+					},
+					{
+						"name": "GarantiaPeriodo",
+						"type": "char"
+					},
+					{
+						"name": "GarantiaNumero",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "GarantiaPorcentaje",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "GarantiaSumPrecio",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "PreciosSuperProducto",
+						"type": "bit"
+					},
+					{
+						"name": "Volumen",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "ProductoVenta",
+						"type": "bit"
+					},
+					{
+						"name": "EnlaceWeb",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Variedades"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FacilERP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Migrar')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "VariedadesERP",
+								"type": "DatasetReference"
+							},
+							"name": "Variedades"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "FacilTEST",
+								"type": "DatasetReference"
+							},
+							"name": "MigrarDatos"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CrearCampos",
+							"description": "Crear campos de la tabla de Replicacion"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "SeleccionarColumnas"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          idVariedad as integer,",
+						"          idProducto as integer,",
+						"          Cod_Variedad as string,",
+						"          Cod_Variedad1 as string,",
+						"          SKU as string,",
+						"          Tipo as boolean,",
+						"          Nom_Variedad as string,",
+						"          Nab_Variedad as string,",
+						"          Pre_CostoSoles as decimal(19,4),",
+						"          Pre_CostoDolares as decimal(19,4),",
+						"          Pre_CostoSolesAnterior as decimal(19,4),",
+						"          Pre_CostoDolaresAnterior as decimal(19,4),",
+						"          Pre_CostoReposicionSoles as decimal(19,4),",
+						"          Pre_CostoReposicionDolares as decimal(19,4),",
+						"          Pre_VentaMinimoSoles as decimal(19,4),",
+						"          Pre_VentaMinimoDolares as decimal(19,4),",
+						"          Pre_VentaMinimoSolesC as decimal(19,4),",
+						"          Pre_VentaMinimoDolaresC as decimal(19,4),",
+						"          Pre_VentaSoles as decimal(19,4),",
+						"          Pre_VentaDolares as decimal(19,4),",
+						"          Pre_VentaSolesC as decimal(19,4),",
+						"          Pre_VentaDolaresC as decimal(19,4),",
+						"          Pre_VentaSolesEsp1 as decimal(19,4),",
+						"          Pre_VentaDolaresEsp1 as decimal(19,4),",
+						"          Pre_VentaSolesEsp1C as decimal(19,4),",
+						"          Pre_VentaDolaresEsp1C as decimal(19,4),",
+						"          Pre_VentaSolesEsp2 as decimal(19,4),",
+						"          Pre_VentaDolaresEsp2 as decimal(19,4),",
+						"          Pre_VentaSolesEsp2C as decimal(19,4),",
+						"          Pre_VentaDolaresEsp2C as decimal(19,4),",
+						"          Pre_VentaSolesEsp3 as decimal(19,4),",
+						"          Pre_VentaDolaresEsp3 as decimal(19,4),",
+						"          Pre_VentaSolesEsp3C as decimal(19,4),",
+						"          Pre_VentaDolaresEsp3C as decimal(19,4),",
+						"          Pre_VentaSolesMayor as decimal(19,4),",
+						"          Pre_VentaDolaresMayor as decimal(19,4),",
+						"          Pre_VentaSolesMayorC as decimal(19,4),",
+						"          Pre_VentaDolaresMayorC as decimal(19,4),",
+						"          Cantidad as double,",
+						"          Cantidad1 as double,",
+						"          Cantidad2 as double,",
+						"          Cantidad3 as double,",
+						"          Cantidad4 as double,",
+						"          Cantidad5 as double,",
+						"          Cantidad6 as double,",
+						"          Cantidad7 as double,",
+						"          Cantidad8 as double,",
+						"          Cantidad9 as double,",
+						"          Cantidad10 as double,",
+						"          Cantidad11 as double,",
+						"          Cantidad12 as double,",
+						"          Cantidad13 as double,",
+						"          Cantidad14 as double,",
+						"          Cantidad15 as double,",
+						"          Unidad as string,",
+						"          Sto_Minimo as double,",
+						"          Por_UtilidadMinimo as float,",
+						"          Por_DescuentoMinimo as float,",
+						"          Por_Utilidad as float,",
+						"          Por_Descuento as float,",
+						"          Por_UtilidadEsp1 as float,",
+						"          Por_DescuentoEsp1 as float,",
+						"          Por_UtilidadEsp2 as float,",
+						"          Por_DescuentoEsp2 as float,",
+						"          Por_UtilidadEsp3 as float,",
+						"          Por_DescuentoEsp3 as float,",
+						"          Por_UtilidadMayor as float,",
+						"          Por_DescuentoMayor as float,",
+						"          Pre_ComisionSoles as decimal(19,4),",
+						"          Pre_ComisionDolares as decimal(19,4),",
+						"          Por_Comision as float,",
+						"          AfectoPercepcion as boolean,",
+						"          Series as boolean,",
+						"          IngresoValor as boolean,",
+						"          Descripcion as string,",
+						"          AfectoStock as boolean,",
+						"          AfectoIGV as boolean,",
+						"          Activo as integer,",
+						"          Estado as string,",
+						"          Peso as float,",
+						"          Ubicacion as string,",
+						"          Ubicacion1 as string,",
+						"          Ubicacion2 as string,",
+						"          Ubicacion3 as string,",
+						"          Ubicacion4 as string,",
+						"          Ubicacion5 as string,",
+						"          Ubicacion6 as string,",
+						"          Ubicacion7 as string,",
+						"          Ubicacion8 as string,",
+						"          Ubicacion9 as string,",
+						"          Ubicacion10 as string,",
+						"          Ubicacion11 as string,",
+						"          Ubicacion12 as string,",
+						"          Ubicacion13 as string,",
+						"          Ubicacion14 as string,",
+						"          Ubicacion15 as string,",
+						"          Internet as boolean,",
+						"          GarantiaPeriodo as string,",
+						"          GarantiaNumero as integer,",
+						"          GarantiaPorcentaje as float,",
+						"          GarantiaSumPrecio as decimal(19,4),",
+						"          PreciosSuperProducto as boolean,",
+						"          Volumen as float,",
+						"          ProductoVenta as boolean,",
+						"          EnlaceWeb as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Variedades",
+						"Variedades derive(Description = Cod_Variedad + \"-\" + Nom_Variedad,",
+						"          CreatedAt = currentUTC()) ~> CrearCampos",
+						"CrearCampos alterRow(upsertIf(true())) ~> AlterRow1",
+						"AlterRow1 select(mapColumn(",
+						"          Sku = Cod_Variedad,",
+						"          Name = Nom_Variedad,",
+						"          Description,",
+						"          Price = Pre_VentaSolesC,",
+						"          Stock = Cantidad,",
+						"          IsActive = Activo,",
+						"          CreatedAt",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SeleccionarColumnas",
+						"SeleccionarColumnas sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ProductId as integer,",
+						"          Sku as string,",
+						"          Name as string,",
+						"          Description as string,",
+						"          Price as decimal(10,2),",
+						"          Stock as integer,",
+						"          IsActive as boolean,",
+						"          CreatedAt as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:false,",
+						"     upsertable:true,",
+						"     keys:['Sku'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          Sku,",
+						"          Name,",
+						"          Description,",
+						"          Price,",
+						"          Stock,",
+						"          IsActive,",
+						"          CreatedAt",
+						"     )) ~> MigrarDatos"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/VariedadesERP')]",
+				"[concat(variables('factoryId'), '/datasets/FacilTEST')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FacilReplicacion')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_TransformarProducto",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Migrar",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Variedades": {},
+									"MigrarDatos": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"UltimaReplicacion": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-01-14T06:51:49Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Migrar')]"
+			]
+		}
+	]
+}
